@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>岡山鳥取 八日自由行</title>
+  <title>岡山鳥取八日自由行</title>
   
-  <!-- Google Fonts: 思源宋體 (Noto Serif TC) 重現明體典雅質感 -->
+  <!-- Google Fonts: 思源宋體 (Noto Serif TC) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@
       line-height: 1.6;
     }
 
-    /* 頂部區域（第二張圖質感標題） */
+    /* 頂部標題（修正不換行、移除名字） */
     header {
       padding: 24px 20px 12px;
       max-width: 600px;
@@ -54,20 +54,21 @@
     }
 
     .header-title h1 {
-      font-size: 1.65rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: var(--primary);
       letter-spacing: 1px;
+      white-space: nowrap; /* 強制單列不換行 */
     }
 
     .header-sub {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-family: 'Playfair Display', serif;
-      letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
-    /* 圖片 1 樣式：大格日曆滑動卡片 (Date Slider) */
+    /* 大格日曆滑動卡片 */
     .date-slider-container {
       max-width: 600px;
       margin: 0 auto 16px;
@@ -130,7 +131,6 @@
       color: var(--text-muted);
     }
 
-    /* 選中狀態（深色大卡片） */
     .date-card.active {
       background: var(--dark-card);
       color: #fff;
@@ -164,7 +164,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 圖片 2 樣式：當日主題卡片 */
+    /* 當日主題卡片 */
     .hero-day-card {
       background: var(--card-bg);
       border-radius: 20px;
@@ -184,7 +184,7 @@
     .kanji-num {
       font-size: 1.8rem;
       font-weight: 700;
-      color: #8c3a2b; /* 典雅朱紅點綴 */
+      color: #8c3a2b;
       line-height: 1;
     }
 
@@ -211,7 +211,7 @@
       border-radius: 12px;
     }
 
-    /* 圖片 2 樣式：大交通/航班卡片 */
+    /* 大交通/航班卡片 */
     .flight-banner {
       background: #ffffff;
       border-radius: 14px;
@@ -223,7 +223,7 @@
       box-shadow: 0 2px 6px var(--shadow);
     }
 
-    /* 圖片 2 樣式：時間軸行程列表 */
+    /* 時間軸行程列表 */
     .timeline {
       position: relative;
       padding-left: 20px;
@@ -310,7 +310,6 @@
     }
 
     .tip-box {
-      background: #efea3d15;
       background-color: #f2ede2;
       padding: 8px 12px;
       border-radius: 8px;
@@ -362,7 +361,7 @@
       display: block;
     }
 
-    /* 其他頁面列表樣式 */
+    /* 列表與工具輸入框 */
     .list-item-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -378,12 +377,23 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       background: #fff;
-      font-size: 1rem;
+      font-size: 0.9rem;
       margin-top: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
-    /* 圖片 2 樣式：底部導覽橫幅 (Bottom Navigation) */
+    .btn-add {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* 底部導覽橫幅 (Bottom Navigation) */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
@@ -427,15 +437,15 @@
   <!-- 頂部標題列 -->
   <header>
     <div class="header-title">
-      <h1 id="app-title">岡山鳥取 八日</h1>
+      <h1 id="app-title">岡山鳥取八日自由行</h1>
     </div>
-    <div class="header-sub" id="app-sub">11/08 － 11/15 · WENDY</div>
+    <div class="header-sub" id="app-sub">2026.11.08 － 11.15</div>
   </header>
 
   <!-- 1. 太陽/天氣分頁 -->
   <section id="tab-weather" class="tab-content">
-    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">☀️ 預計行程天氣總覽</h3>
-    <div id="weather-cards-container"></div>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">☀️ 網路實時氣象預報 (API 串接)</h3>
+    <div id="weather-cards-container">載入最新天氣資訊中...</div>
   </section>
 
   <!-- 2. 準備分頁 -->
@@ -446,18 +456,11 @@
 
   <!-- 3. 行程分頁 (預設頁) -->
   <section id="tab-itinerary" class="tab-content active">
-    <!-- 日期選擇器大卡片 -->
     <div class="date-slider-container">
       <div class="date-slider" id="date-slider"></div>
     </div>
-
-    <!-- 當日主題卡片 -->
     <div id="hero-day-area"></div>
-
-    <!-- 航班/大交通橫幅 -->
     <div id="flight-banner-area"></div>
-
-    <!-- 詳細行程時間軸 -->
     <div class="timeline" id="spots-timeline"></div>
   </section>
 
@@ -471,10 +474,17 @@
     </div>
   </section>
 
-  <!-- 5. 資源分頁 -->
+  <!-- 5. 資源分頁 (支援動態線上新增連結) -->
   <section id="tab-resources" class="tab-content">
     <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結資源</h3>
     <div id="resources-container"></div>
+
+    <div class="list-item-card" style="margin-top:20px; background:#f4eee2;">
+      <strong style="font-size:0.95rem; color:var(--primary);">➕ 自訂新增實用連結</strong>
+      <input type="text" class="tool-input" id="new-res-title" placeholder="連結名稱 (例如：壽司名店地圖)">
+      <input type="text" class="tool-input" id="new-res-url" placeholder="網址 (https://...)">
+      <button class="btn-add" onclick="addCustomResource()">新增至我的資源</button>
+    </div>
   </section>
 
   <!-- 底部選單（順序：天氣 ➔ 準備 ➔ 行程 ➔ 工具 ➔ 資源） -->
@@ -505,7 +515,6 @@
     const data = window.TRIP_DATA;
     let currentDayIdx = 0;
 
-    // 初始化網頁內容
     function initApp() {
       if (!data) return;
 
@@ -514,16 +523,14 @@
 
       renderDateSlider();
       renderDayContent(0);
-      renderWeatherTab();
+      fetchLiveWeather(); // 動態抓取實時天氣
       renderPrepareTab();
       renderResourcesTab();
     }
 
-    // 渲染圖片 1 樣式的大格日期卡片
     function renderDateSlider() {
       const slider = document.getElementById('date-slider');
       slider.innerHTML = '';
-
       data.days.forEach((day, idx) => {
         const activeClass = idx === 0 ? 'active' : '';
         slider.innerHTML += `
@@ -537,7 +544,6 @@
       });
     }
 
-    // 點選日期卡片切換
     function selectDay(idx, element) {
       currentDayIdx = idx;
       document.querySelectorAll('.date-card').forEach(c => c.classList.remove('active'));
@@ -545,11 +551,9 @@
       renderDayContent(idx);
     }
 
-    // 渲染圖片 2 樣式的當日行程內容
     function renderDayContent(idx) {
       const day = data.days[idx];
 
-      // 1. 當日主題卡片
       document.getElementById('hero-day-area').innerHTML = `
         <div class="hero-day-card">
           <div class="hero-day-header">
@@ -558,12 +562,13 @@
           </div>
           <div class="headline-title">${day.headline}</div>
           <div class="weather-info-bar">
-            <span>☀️ ${day.location} · ${day.weather}</span>
+            <span id="hero-weather-text">☀️ ${day.location} · 載入最新天氣中...</span>
           </div>
         </div>
       `;
 
-      // 2. 航班/大交通橫幅
+      updateHeroWeather(day.lat, day.lon, day.location);
+
       const flightArea = document.getElementById('flight-banner-area');
       if (day.flight) {
         flightArea.innerHTML = `<div class="flight-banner">✈️ ${day.flight}</div>`;
@@ -571,7 +576,6 @@
         flightArea.innerHTML = '';
       }
 
-      // 3. 詳細時間軸
       const timeline = document.getElementById('spots-timeline');
       timeline.innerHTML = '';
 
@@ -613,7 +617,6 @@
       });
     }
 
-    // 切換彈性選項 (Option 1 & 2)
     function toggleOpt(spotIdx, optIdx, btn) {
       const parent = btn.closest('.options-box');
       parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
@@ -623,24 +626,61 @@
       document.getElementById(`opt-p-${spotIdx}-${optIdx}`).classList.add('active');
     }
 
-    // 渲染天氣 Tab
-    function renderWeatherTab() {
-      const container = document.getElementById('weather-cards-container');
-      container.innerHTML = '';
-      data.days.forEach(day => {
-        container.innerHTML += `
-          <div class="list-item-card" style="display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <strong>${day.fullDate} (${day.kanjiNum}) · ${day.location}</strong>
-              <div style="font-size:0.82rem; color:var(--text-muted);">${day.headline}</div>
-            </div>
-            <div style="font-size:0.95rem; font-weight:bold; color:var(--accent);">${day.weather.split('·')[0]}</div>
-          </div>
-        `;
-      });
+    // 網路實時 API 串接 (Open-Meteo API)
+    async function updateHeroWeather(lat, lon, locationName) {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`);
+        const wData = await res.json();
+        const current = wData.current_weather;
+        const daily = wData.daily;
+
+        const temp = Math.round(current.temperature);
+        const maxTemp = Math.round(daily.temperature_2m_max[0]);
+        const minTemp = Math.round(daily.temperature_2m_min[0]);
+        const rainProb = daily.precipitation_probability_max[0] || 0;
+
+        document.getElementById('hero-weather-text').innerText = `🌤️ ${locationName} · 目前 ${temp}°C (${maxTemp}° / ${minTemp}°) · 降雨機率 ${rainProb}%`;
+      } catch (e) {
+        document.getElementById('hero-weather-text').innerText = `☀️ ${locationName} · 天氣連線中`;
+      }
     }
 
-    // 渲染準備 Tab
+    async function fetchLiveWeather() {
+      const container = document.getElementById('weather-cards-container');
+      container.innerHTML = '';
+
+      for (let day of data.days) {
+        try {
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`);
+          const wData = await res.json();
+          const daily = wData.daily;
+
+          const maxTemp = Math.round(daily.temperature_2m_max[0]);
+          const minTemp = Math.round(daily.temperature_2m_min[0]);
+          const rainProb = daily.precipitation_probability_max[0] || 0;
+
+          container.innerHTML += `
+            <div class="list-item-card" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <strong>${day.fullDate} (${day.kanjiNum}) · ${day.location}</strong>
+                <div style="font-size:0.82rem; color:var(--text-muted);">${day.headline}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.95rem; font-weight:bold; color:var(--accent);">${maxTemp}° / ${minTemp}°C</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">🌧️ 降雨率 ${rainProb}%</div>
+              </div>
+            </div>
+          `;
+        } catch (e) {
+          container.innerHTML += `
+            <div class="list-item-card">
+              <strong>${day.fullDate} · ${day.location}</strong> - 天氣連線中
+            </div>
+          `;
+        }
+      }
+    }
+
     function renderPrepareTab() {
       const container = document.getElementById('prepare-list-container');
       container.innerHTML = '';
@@ -654,10 +694,11 @@
       });
     }
 
-    // 渲染資源 Tab
     function renderResourcesTab() {
       const container = document.getElementById('resources-container');
       container.innerHTML = '';
+
+      // 1. 預設資源
       data.resources.forEach(res => {
         container.innerHTML += `
           <div class="list-item-card">
@@ -667,16 +708,47 @@
           </div>
         `;
       });
+
+      // 2. 讀取使用者自訂新增的連結 (LocalStorage)
+      const customRes = JSON.parse(localStorage.getItem('my_custom_resources') || '[]');
+      customRes.forEach(res => {
+        container.innerHTML += `
+          <div class="list-item-card" style="border-left: 3px solid var(--accent);">
+            <strong>📌 ${res.title}</strong>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:6px;">使用者新增的私房連結</div>
+            <a href="${res.url}" target="_blank" class="btn-nav">開啟連結</a>
+          </div>
+        `;
+      });
     }
 
-    // 換匯計算
+    // 線上動態新增自訂連結功能
+    function addCustomResource() {
+      const title = document.getElementById('new-res-title').value.trim();
+      const url = document.getElementById('new-res-url').value.trim();
+
+      if (!title || !url) {
+        alert('請輸入名稱與網址！');
+        return;
+      }
+
+      const customRes = JSON.parse(localStorage.getItem('my_custom_resources') || '[]');
+      customRes.push({ title, url });
+      localStorage.setItem('my_custom_resources', JSON.stringify(customRes));
+
+      document.getElementById('new-res-title').value = '';
+      document.getElementById('new-res-url').value = '';
+
+      renderResourcesTab();
+      alert('成功新增連結！');
+    }
+
     function calcJpy() {
       const jpy = document.getElementById('jpy-val').value;
       const rate = data.currencyRate || 0.215;
       document.getElementById('twd-val').innerText = jpy ? Math.round(jpy * rate) : 0;
     }
 
-    // 底部選單切換
     function switchNav(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -686,7 +758,6 @@
       window.scrollTo(0, 0);
     }
 
-    // 啟動
     window.onload = initApp;
   </script>
 </body>
