@@ -3,23 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>2026 岡山鳥取 8 日自由行手帳</title>
-  <!-- Google Fonts: 圓體與襯線體 -->
+  <title>岡山鳥取 八日自由行</title>
+  
+  <!-- Google Fonts: 思源宋體 (Noto Serif TC) 重現明體典雅質感 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- 載入行程資料檔 -->
+  <script src="js/data.js"></script>
+
   <style>
     :root {
-      --bg-color: #f7f3ed;       /* 溫暖日系米色背景 */
-      --card-bg: #ffffff;        /* 純白卡片背景 */
-      --primary: #8c7355;        /* 大地咖啡棕 */
-      --primary-light: #f1ebd9;  /* 淺大地色標籤 */
-      --accent: #d9a05b;         /* 暖木橘/點綴色 */
-      --text: #4a4238;           /* 深灰色文字 */
-      --text-muted: #8c8275;     /* 輔助文字灰色 */
-      --border: #e8e2d8;         /* 淡色邊框 */
-      --shadow: rgba(140, 115, 85, 0.08);
-      --nav-height: 65px;
+      --bg-color: #f6f2ea;        /* 米奶茶色背景 */
+      --card-bg: #fdfbf7;       /* 溫暖柔和白卡片 */
+      --primary: #3c3228;        /* 沉穩深灰褐 */
+      --primary-light: #eae3d2;  /* 柔和奶茶標籤 */
+      --accent: #9a7342;         /* 典雅木質棕 */
+      --text: #3c3228;           /* 主要文字 */
+      --text-muted: #887c6e;     /* 次要淡灰色 */
+      --border: #e6dec8;         /* 淡外框 */
+      --dark-card: #2f2720;      /* 選中狀態深色卡片 */
+      --shadow: rgba(60, 50, 40, 0.05);
+      --nav-height: 64px;
     }
 
     * {
@@ -32,116 +38,205 @@
     body {
       background-color: var(--bg-color);
       color: var(--text);
-      font-family: 'Zen Maru Gothic', 'Noto Serif TC', sans-serif;
-      padding-bottom: calc(var(--nav-height) + 20px);
+      font-family: 'Songti TC', 'PMingLiU', 'Noto Serif TC', serif;
+      padding-bottom: calc(var(--nav-height) + 24px);
       line-height: 1.6;
     }
 
-    /* 頂部 Header & 倒數小工具 */
+    /* 頂部區域（第二張圖質感標題） */
     header {
-      background: linear-gradient(135deg, #e8dfd3 0%, #f7f3ed 100%);
-      padding: 24px 20px 16px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
+      padding: 24px 20px 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
     }
 
-    h1 {
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.5rem;
+    .header-title h1 {
+      font-size: 1.65rem;
+      font-weight: 700;
       color: var(--primary);
-      margin-bottom: 4px;
+      letter-spacing: 1px;
     }
 
-    .subtitle {
-      font-size: 0.85rem;
+    .header-sub {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin-bottom: 12px;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.5px;
     }
 
-    .countdown-card {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    /* 圖片 1 樣式：大格日曆滑動卡片 (Date Slider) */
+    .date-slider-container {
+      max-width: 600px;
+      margin: 0 auto 16px;
+      padding: 4px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .date-slider-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .date-slider {
+      display: flex;
+      gap: 12px;
+    }
+
+    .date-card {
+      flex: 0 0 72px;
+      height: 96px;
       background: var(--card-bg);
-      padding: 6px 16px;
+      border: 1px solid var(--border);
       border-radius: 20px;
-      border: 1px dashed var(--accent);
-      font-size: 0.9rem;
-      font-weight: bold;
-      color: var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
       box-shadow: 0 2px 8px var(--shadow);
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+      position: relative;
     }
 
-    /* 頁面分頁切換 */
+    .date-card .weekday {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .date-card .day-tag {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.65rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--text-muted);
+    }
+
+    .date-card .day-num {
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin: 2px 0;
+      color: var(--primary);
+    }
+
+    .date-card .month-num {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* 選中狀態（深色大卡片） */
+    .date-card.active {
+      background: var(--dark-card);
+      color: #fff;
+      border-color: var(--dark-card);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(47, 39, 32, 0.25);
+    }
+
+    .date-card.active .weekday,
+    .date-card.active .day-tag,
+    .date-card.active .day-num,
+    .date-card.active .month-num {
+      color: #ffffff !important;
+    }
+
+    /* 頁面分頁 */
     .tab-content {
       display: none;
-      padding: 16px;
+      padding: 0 16px;
       max-width: 600px;
       margin: 0 auto;
     }
 
     .tab-content.active {
       display: block;
-      animation: fadeIn 0.3s ease-in-out;
+      animation: fadeIn 0.3s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 天數滑動選擇器 (Day Selector) */
-    .day-selector {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 12px 16px;
-      background: var(--bg-color);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
-
-    .day-selector::-webkit-scrollbar {
-      display: none;
-    }
-
-    .day-btn {
-      flex: 0 0 auto;
-      padding: 6px 14px;
+    /* 圖片 2 樣式：當日主題卡片 */
+    .hero-day-card {
       background: var(--card-bg);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
       border: 1px solid var(--border);
-      border-radius: 18px;
-      font-size: 0.85rem;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .hero-day-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .kanji-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #8c3a2b; /* 典雅朱紅點綴 */
+      line-height: 1;
+    }
+
+    .full-date-str {
+      font-size: 0.95rem;
       color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .day-btn.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-      font-weight: bold;
+    .headline-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
     }
 
-    /* 手帳風行程卡片 */
+    .weather-info-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: #f2ebd9;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    /* 圖片 2 樣式：大交通/航班卡片 */
+    .flight-banner {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--primary);
+      box-shadow: 0 2px 6px var(--shadow);
+    }
+
+    /* 圖片 2 樣式：時間軸行程列表 */
     .timeline {
       position: relative;
       padding-left: 20px;
-      margin-top: 12px;
     }
 
     .timeline::before {
       content: '';
       position: absolute;
-      left: 6px;
-      top: 10px;
-      bottom: 10px;
-      width: 2px;
-      background: var(--border);
+      left: 5px;
+      top: 12px;
+      bottom: 20px;
+      width: 1px;
+      background: #d8cebc;
     }
 
     .spot-card {
@@ -149,76 +244,89 @@
       background: var(--card-bg);
       border-radius: 16px;
       padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px var(--shadow);
-      border: 1px solid rgba(232, 226, 216, 0.6);
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .spot-card::before {
       content: '';
       position: absolute;
       left: -20px;
-      top: 20px;
-      width: 10px;
-      height: 10px;
+      top: 22px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--card-bg);
+      background: var(--bg-color);
+      border: 2px solid #887c6e;
+    }
+
+    .spot-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
     .spot-time {
-      font-size: 0.8rem;
-      font-weight: bold;
-      color: var(--accent);
-      margin-bottom: 4px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .spot-tag {
+      background: #5c5246;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 1px 7px;
+      border-radius: 6px;
     }
 
     .spot-title {
       font-size: 1.05rem;
-      font-weight: bold;
-      color: var(--text);
+      font-weight: 700;
+      color: var(--primary);
       margin-bottom: 6px;
     }
 
     .spot-desc {
       font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
+      color: #554a3e;
       white-space: pre-line;
+      margin-bottom: 8px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      background: var(--primary-light);
-      color: var(--primary);
-      font-size: 0.75rem;
-      border-radius: 6px;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-
-    .map-link {
+    .btn-nav {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.8rem;
-      color: var(--primary);
-      text-decoration: none;
-      background: #fdfaf5;
+      font-size: 0.78rem;
+      color: #8c3a2b;
+      background: #f8f1e5;
       padding: 4px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 4px;
     }
 
-    /* 彈性選項按鈕 (Option 1 & 2) */
-    .option-container {
+    .tip-box {
+      background: #efea3d15;
+      background-color: #f2ede2;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #665a4c;
+      margin-top: 8px;
+    }
+
+    /* 備選方案 (Option 1 & Option 2) */
+    .options-box {
       margin-top: 10px;
       border-top: 1px dashed var(--border);
       padding-top: 10px;
     }
 
-    .option-btns {
+    .opt-btn-group {
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
@@ -227,11 +335,11 @@
     .opt-btn {
       flex: 1;
       padding: 6px;
-      border: 1px solid var(--border);
+      font-size: 0.78rem;
       background: var(--bg-color);
-      border-radius: 10px;
-      font-size: 0.8rem;
-      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
       cursor: pointer;
     }
 
@@ -241,394 +349,345 @@
       border-color: var(--primary);
     }
 
-    .opt-content {
+    .opt-panel {
       display: none;
-      font-size: 0.85rem;
-      color: var(--text);
-      background: #faf6f0;
-      padding: 10px;
+      font-size: 0.82rem;
+      padding: 8px 12px;
+      background: #f4eee2;
       border-radius: 8px;
-    }
-
-    .opt-content.active {
-      display: block;
-    }
-
-    /* 天氣分頁卡片 */
-    .weather-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 12px var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .weather-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .weather-temp {
-      font-size: 1.4rem;
-      font-weight: bold;
       color: var(--primary);
     }
 
-    /* 清單與記帳樣式 */
-    .checklist-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .opt-panel.active {
+      display: block;
+    }
+
+    /* 其他頁面列表樣式 */
+    .list-item-card {
       background: var(--card-bg);
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
       box-shadow: 0 2px 6px var(--shadow);
     }
 
-    .checklist-item input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary);
-    }
-
-    /* 工具類輸入框 */
-    .tool-box {
-      background: var(--card-bg);
-      padding: 16px;
-      border-radius: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px var(--shadow);
-    }
-
-    .tool-box input, .tool-box select {
+    .tool-input {
       width: 100%;
-      padding: 8px 12px;
+      padding: 10px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1rem;
       margin-top: 6px;
       margin-bottom: 12px;
     }
 
-    /* 底部導覽橫幅 (Bottom Navigation) */
+    /* 圖片 2 樣式：底部導覽橫幅 (Bottom Navigation) */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: var(--nav-height);
-      background: #ffffff;
+      background: #fdfbf7;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
       align-items: center;
       z-index: 100;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
     }
 
-    .nav-item {
+    .nav-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      text-decoration: none;
       background: none;
       border: none;
-      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 0.72rem;
       width: 20%;
+      cursor: pointer;
     }
 
-    .nav-item icon {
-      font-size: 1.25rem;
+    .nav-btn .icon {
+      font-size: 1.2rem;
       margin-bottom: 2px;
     }
 
-    .nav-item.active {
-      color: var(--primary);
+    .nav-btn.active {
+      color: #8c3a2b;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <!-- 頂部標頭與倒數計時 -->
+  <!-- 頂部標題列 -->
   <header>
-    <h1>岡山鳥取 8 日自由行</h1>
-    <div class="subtitle">2026.11.08 ➔ 2026.11.15</div>
-    <div class="countdown-card">
-      ⏳ 距離出發還有 <span id="countdown">--</span> 天
+    <div class="header-title">
+      <h1 id="app-title">岡山鳥取 八日</h1>
     </div>
+    <div class="header-sub" id="app-sub">11/08 － 11/15 · WENDY</div>
   </header>
 
-  <!-- 1. 天氣分頁 -->
+  <!-- 1. 太陽/天氣分頁 -->
   <section id="tab-weather" class="tab-content">
-    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">☀️ 行程各城市氣象預報</h2>
-    <div id="weather-list">
-      <!-- 自動產出天氣卡片 -->
-    </div>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">☀️ 預計行程天氣總覽</h3>
+    <div id="weather-cards-container"></div>
   </section>
 
   <!-- 2. 準備分頁 -->
   <section id="tab-prepare" class="tab-content">
-    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">📋 行前準備 Checklist</h2>
-    <div id="checklist-container">
-      <div class="checklist-item"><input type="checkbox" id="c1"><label for="c1">護照（效期 6 個月以上）</label></div>
-      <div class="checklist-item"><input type="checkbox" id="c2"><label for="c2">Visit Japan Web 入境卡填寫</label></div>
-      <div class="checklist-item"><input type="checkbox" id="c3"><label for="c3">JR 山陰&山陽 7日 Pass 兌換券</label></div>
-      <div class="checklist-item"><input type="checkbox" id="c4"><label for="c4">日圓現金（現場購票/備用）</label></div>
-      <div class="checklist-item"><input type="checkbox" id="c5"><label for="c5">網卡 / eSIM 設定完成</label></div>
-      <div class="checklist-item"><input type="checkbox" id="c6"><label for="c6">保暖衣物與折傘（山陰溫差大）</label></div>
-    </div>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">📋 行前準備清單</h3>
+    <div id="prepare-list-container"></div>
   </section>
 
   <!-- 3. 行程分頁 (預設頁) -->
   <section id="tab-itinerary" class="tab-content active">
-    <!-- Day 選擇器 -->
-    <div class="day-selector">
-      <button class="day-btn active" onclick="showDay(1)">Day 1 (11/08)</button>
-      <button class="day-btn" onclick="showDay(2)">Day 2 (11/09)</button>
-      <button class="day-btn" onclick="showDay(3)">Day 3 (11/10)</button>
-      <button class="day-btn" onclick="showDay(4)">Day 4 (11/11)</button>
-      <button class="day-btn" onclick="showDay(5)">Day 5 (11/12)</button>
-      <button class="day-btn" onclick="showDay(6)">Day 6 (11/13)</button>
-      <button class="day-btn" onclick="showDay(7)">Day 7 (11/14)</button>
-      <button class="day-btn" onclick="showDay(8)">Day 8 (11/15)</button>
+    <!-- 日期選擇器大卡片 -->
+    <div class="date-slider-container">
+      <div class="date-slider" id="date-slider"></div>
     </div>
 
-    <!-- Day 1 行程 -->
-    <div id="day-1" class="day-content">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">13:05 - 16:30</div>
-          <div class="spot-title">✈️ 桃園國際機場 ➔ 岡山桃太郎機場</div>
-          <div class="spot-desc">虎航 IT714 航班（飛行時間 2h25m）</div>
-          <span class="badge">航班</span>
-        </div>
-        <div class="spot-card">
-          <div class="spot-time">17:30 - 18:00</div>
-          <div class="spot-title">🚌 岡山機場 ➔ JR 岡山站</div>
-          <div class="spot-desc">搭乘接駁巴士（約 780 日圓，可刷電子卡）</div>
-          <span class="badge">交通</span>
-        </div>
-        <div class="spot-card">
-          <div class="spot-time">18:00 - 18:40</div>
-          <div class="spot-title">🎫 兌換 JR Pass 7日券與劃位</div>
-          <div class="spot-desc">JR 岡山站綠色窗口/售票機兌換 Pass</div>
-          <span class="badge">票券</span>
-        </div>
-        <div class="spot-card">
-          <div class="spot-time">20:19 - 22:10</div>
-          <div class="spot-title">🚆 JR 岡山站 ➔ JR 鳥取站</div>
-          <div class="spot-desc">特急 Super Inaba 11號 (車程約 1h51m)
-💡 列車折返提醒：行駛至「上郡站」時會折返，全車乘客會自行轉向座椅。</div>
-          <span class="badge">JR 特急</span>
-        </div>
-      </div>
-    </div>
+    <!-- 當日主題卡片 -->
+    <div id="hero-day-area"></div>
 
-    <!-- Day 2 行程 (含彈性選項) -->
-    <div id="day-2" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">09:00 - 12:30</div>
-          <div class="spot-title">🐪 鳥取砂丘 & 駱駝體驗</div>
-          <div class="spot-desc">日本最大海岸砂丘，可搭乘觀光纜車與體驗騎駱駝。</div>
-          
-          <!-- 彈性選項 -->
-          <div class="option-container">
-            <div style="font-size:0.78rem; color:var(--primary); font-weight:bold; margin-bottom:4px;">🔀 午後彈性備案選擇：</div>
-            <div class="option-btns">
-              <button class="opt-btn active" onclick="switchOpt('d2-1', this)">選項 1：砂丘會館/纜車</button>
-              <button class="opt-btn" onclick="switchOpt('d2-2', this)">選項 2：雨天備案美術館</button>
-            </div>
-            <div id="d2-1" class="opt-content active">
-              ☀️ 晴天行程：於砂丘會館享用海鮮丼飯、梨子冰淇淋，並搭乘纜車前往展望台觀海。
-            </div>
-            <div id="d2-2" class="opt-content">
-              🌧️ 雨天備案：前往「砂之美術館」欣賞世界頂級沙雕，或參觀渡邊美術館。
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- 航班/大交通橫幅 -->
+    <div id="flight-banner-area"></div>
 
-    <!-- Day 3 ~ 8 占位預設結構 -->
-    <div id="day-3" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">全天</div>
-          <div class="spot-title">⛩️ 白兔神社 & 若櫻鐵道懷舊之旅</div>
-          <div class="spot-desc">造訪姻緣白兔神社，體驗若櫻線木造復古車站散策。</div>
-        </div>
-      </div>
-    </div>
-    <div id="day-4" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">全天</div>
-          <div class="spot-title">👻 境港鬼太郎水木茂大道 & 鳥取花回廊</div>
-          <div class="spot-desc">漫步鬼太郎妖怪大街，下午前往足立美術館欣賞連續20年日本第一庭園。</div>
-        </div>
-      </div>
-    </div>
-    <div id="day-5" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">全天</div>
-          <div class="spot-title">🕵️ 柯南小鎮 (由良) & 倉吉白壁土藏群</div>
-          <div class="spot-desc">青山剛昌故鄉館巡禮，下午至倉吉白壁體驗石臼咖啡與赤瓦老街。</div>
-        </div>
-      </div>
-    </div>
-    <div id="day-6" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">全天</div>
-          <div class="spot-title">🏯 岡山後樂園 & 岡山城名勝散策</div>
-          <div class="spot-desc">走訪日本三大名園之一後樂園，傍晚至表町商店街與 AEON Mall 採買。</div>
-        </div>
-      </div>
-    </div>
-    <div id="day-7" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">全天</div>
-          <div class="spot-title">🚣 倉敷美觀地區 & 兒島牛仔褲街</div>
-          <div class="spot-desc">倉敷川搭乘小舟、造訪阿智神社與 mt 紙膠帶專賣店，延伸至兒島丹寧街。</div>
-        </div>
-      </div>
-    </div>
-    <div id="day-8" class="day-content" style="display:none;">
-      <div class="timeline">
-        <div class="spot-card">
-          <div class="spot-time">10:00 - 13:00</div>
-          <div class="spot-title">🍑 吉備津神社 & 返台</div>
-          <div class="spot-desc">參觀桃太郎傳說的 360 公尺大迴廊，隨後搭巴士至岡山機場搭乘 IT215 返回台北。</div>
-        </div>
-      </div>
-    </div>
+    <!-- 詳細行程時間軸 -->
+    <div class="timeline" id="spots-timeline"></div>
   </section>
 
   <!-- 4. 工具分頁 -->
   <section id="tab-tools" class="tab-content">
-    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">🧮 日幣換算與簡易記帳</h2>
-    <div class="tool-box">
-      <label>💴 日圓金額 (JPY)：</label>
-      <input type="number" id="jpy-input" placeholder="例如：1000" oninput="convertCurrency()">
-      <div>約合台幣 (TWD)：<strong id="twd-result" style="color:var(--accent);">0</strong> 元 (匯率約 0.215)</div>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🧮 試算與工具</h3>
+    <div class="list-item-card">
+      <label style="font-size:0.88rem; color:var(--text-muted);">💴 日圓試算 (JPY)：</label>
+      <input type="number" class="tool-input" id="jpy-val" placeholder="請輸入金額，例如 1000" oninput="calcJpy()">
+      <div style="font-size:0.95rem;">約合台幣 (TWD)：<strong id="twd-val" style="color:#8c3a2b;">0</strong> 元</div>
     </div>
   </section>
 
   <!-- 5. 資源分頁 -->
   <section id="tab-resources" class="tab-content">
-    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">🔗 實用連結與備忘</h2>
-    <div class="spot-card">
-      <div class="spot-title"> Visit Japan Web</div>
-      <div class="spot-desc">電子入境卡與海關申報</div>
-      <a href="https://vjw-lp.digital.go.jp/" target="_blank" class="map-link">開啟網站</a>
-    </div>
-    <div class="spot-card">
-      <div class="spot-title">🚄 JR 西日本時刻表</div>
-      <div class="spot-desc">查詢 Super Inaba 與山陰特急班次</div>
-      <a href="https://www.westjr.co.jp/global/tc/" target="_blank" class="map-link">開啟網站</a>
-    </div>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結資源</h3>
+    <div id="resources-container"></div>
   </section>
 
-  <!-- 底部固定導覽列（順序：天氣 -> 準備 -> 行程 -> 工具 -> 資源） -->
+  <!-- 底部選單（順序：天氣 ➔ 準備 ➔ 行程 ➔ 工具 ➔ 資源） -->
   <nav class="bottom-nav">
-    <button class="nav-item" onclick="switchTab('tab-weather', this)">
-      <span style="font-size:1.2rem;">☀️</span>
+    <button class="nav-btn" onclick="switchNav('tab-weather', this)">
+      <span class="icon">☀️</span>
       <span>天氣</span>
     </button>
-    <button class="nav-item" onclick="switchTab('tab-prepare', this)">
-      <span style="font-size:1.2rem;">📋</span>
+    <button class="nav-btn" onclick="switchNav('tab-prepare', this)">
+      <span class="icon">📋</span>
       <span>準備</span>
     </button>
-    <button class="nav-item active" onclick="switchTab('tab-itinerary', this)">
-      <span style="font-size:1.2rem;">🗺️</span>
+    <button class="nav-btn active" onclick="switchNav('tab-itinerary', this)">
+      <span class="icon">🗺️</span>
       <span>行程</span>
     </button>
-    <button class="nav-item" onclick="switchTab('tab-tools', this)">
-      <span style="font-size:1.2rem;">🧮</span>
+    <button class="nav-btn" onclick="switchNav('tab-tools', this)">
+      <span class="icon">🧮</span>
       <span>工具</span>
     </button>
-    <button class="nav-item" onclick="switchTab('tab-resources', this)">
-      <span style="font-size:1.2rem;">🔗</span>
+    <button class="nav-btn" onclick="switchNav('tab-resources', this)">
+      <span class="icon">🔗</span>
       <span>資源</span>
     </button>
   </nav>
 
   <script>
-    // 1. 出發倒數計時
-    function updateCountdown() {
-      const targetDate = new Date('2026-11-08T00:00:00');
-      const now = new Date();
-      const diff = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
-      document.getElementById('countdown').innerText = diff > 0 ? diff : 0;
-    }
-    updateCountdown();
+    const data = window.TRIP_DATA;
+    let currentDayIdx = 0;
 
-    // 2. 底部 Tab 切換
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      
+    // 初始化網頁內容
+    function initApp() {
+      if (!data) return;
+
+      document.getElementById('app-title').innerText = data.title;
+      document.getElementById('app-sub').innerText = data.subtitle;
+
+      renderDateSlider();
+      renderDayContent(0);
+      renderWeatherTab();
+      renderPrepareTab();
+      renderResourcesTab();
+    }
+
+    // 渲染圖片 1 樣式的大格日期卡片
+    function renderDateSlider() {
+      const slider = document.getElementById('date-slider');
+      slider.innerHTML = '';
+
+      data.days.forEach((day, idx) => {
+        const activeClass = idx === 0 ? 'active' : '';
+        slider.innerHTML += `
+          <div class="date-card ${activeClass}" onclick="selectDay(${idx}, this)">
+            <span class="day-tag">D${day.dayNum}</span>
+            <span class="weekday">${day.weekDay}</span>
+            <span class="day-num">${day.dateNum}</span>
+            <span class="month-num">${day.monthNum}</span>
+          </div>
+        `;
+      });
+    }
+
+    // 點選日期卡片切換
+    function selectDay(idx, element) {
+      currentDayIdx = idx;
+      document.querySelectorAll('.date-card').forEach(c => c.classList.remove('active'));
+      element.classList.add('active');
+      renderDayContent(idx);
+    }
+
+    // 渲染圖片 2 樣式的當日行程內容
+    function renderDayContent(idx) {
+      const day = data.days[idx];
+
+      // 1. 當日主題卡片
+      document.getElementById('hero-day-area').innerHTML = `
+        <div class="hero-day-card">
+          <div class="hero-day-header">
+            <span class="kanji-num">${day.kanjiNum}</span>
+            <span class="full-date-str">${day.fullDate} · ${day.dayOfWeek}</span>
+          </div>
+          <div class="headline-title">${day.headline}</div>
+          <div class="weather-info-bar">
+            <span>☀️ ${day.location} · ${day.weather}</span>
+          </div>
+        </div>
+      `;
+
+      // 2. 航班/大交通橫幅
+      const flightArea = document.getElementById('flight-banner-area');
+      if (day.flight) {
+        flightArea.innerHTML = `<div class="flight-banner">✈️ ${day.flight}</div>`;
+      } else {
+        flightArea.innerHTML = '';
+      }
+
+      // 3. 詳細時間軸
+      const timeline = document.getElementById('spots-timeline');
+      timeline.innerHTML = '';
+
+      day.spots.forEach((spot, sIdx) => {
+        let optHtml = '';
+        if (spot.options && spot.options.length > 0) {
+          optHtml = `
+            <div class="options-box">
+              <div class="opt-btn-group">
+                ${spot.options.map((opt, oIdx) => `
+                  <button class="opt-btn ${oIdx === 0 ? 'active' : ''}" onclick="toggleOpt(${sIdx},${oIdx}, this)">
+                    ${opt.name.split('：')[0]}
+                  </button>
+                `).join('')}
+              </div>
+              ${spot.options.map((opt, oIdx) => `
+                <div class="opt-panel opt-panel-${sIdx}${oIdx === 0 ? 'active' : ''}" id="opt-p-${sIdx}-${oIdx}">
+                  <strong>${opt.name}</strong><br>${opt.desc}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        timeline.innerHTML += `
+          <div class="spot-card">
+            <div class="spot-header">
+              <span class="spot-time">${spot.time}</span>
+              ${spot.tag ? `<span class="spot-tag">${spot.tag}</span>` : ''}
+            </div>
+            <div class="spot-title">${spot.title}</div>
+            <div class="spot-desc">${spot.desc}</div>
+            ${spot.cost ? `<div style="font-size:0.8rem; color:var(--accent); font-weight:bold;">預估費用：${spot.cost}</div>` : ''}
+            ${spot.tip ? `<div class="tip-box">${spot.tip}</div>` : ''}
+            ${spot.navLink ? `<a href="${spot.navLink}" target="_blank" class="btn-nav">📍 開啟導航 / 連結</a>` : ''}
+            ${optHtml}
+          </div>
+        `;
+      });
+    }
+
+    // 切換彈性選項 (Option 1 & 2)
+    function toggleOpt(spotIdx, optIdx, btn) {
+      const parent = btn.closest('.options-box');
+      parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll(`.opt-panel-${spotIdx}`).forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById(`opt-p-${spotIdx}-${optIdx}`).classList.add('active');
+    }
+
+    // 渲染天氣 Tab
+    function renderWeatherTab() {
+      const container = document.getElementById('weather-cards-container');
+      container.innerHTML = '';
+      data.days.forEach(day => {
+        container.innerHTML += `
+          <div class="list-item-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong>${day.fullDate} (${day.kanjiNum}) · ${day.location}</strong>
+              <div style="font-size:0.82rem; color:var(--text-muted);">${day.headline}</div>
+            </div>
+            <div style="font-size:0.95rem; font-weight:bold; color:var(--accent);">${day.weather.split('·')[0]}</div>
+          </div>
+        `;
+      });
+    }
+
+    // 渲染準備 Tab
+    function renderPrepareTab() {
+      const container = document.getElementById('prepare-list-container');
+      container.innerHTML = '';
+      data.prepareList.forEach((item, idx) => {
+        container.innerHTML += `
+          <div class="list-item-card" style="display:flex; align-items:center; gap:10px;">
+            <input type="checkbox" id="prep-${idx}" style="width:18px; height:18px; accent-color:#8c3a2b;">
+            <label for="prep-${idx}" style="font-size:0.9rem;">${item}</label>
+          </div>
+        `;
+      });
+    }
+
+    // 渲染資源 Tab
+    function renderResourcesTab() {
+      const container = document.getElementById('resources-container');
+      container.innerHTML = '';
+      data.resources.forEach(res => {
+        container.innerHTML += `
+          <div class="list-item-card">
+            <strong>${res.title}</strong>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:6px;">${res.desc}</div>
+            <a href="${res.url}" target="_blank" class="btn-nav">開啟連結</a>
+          </div>
+        `;
+      });
+    }
+
+    // 換匯計算
+    function calcJpy() {
+      const jpy = document.getElementById('jpy-val').value;
+      const rate = data.currencyRate || 0.215;
+      document.getElementById('twd-val').innerText = jpy ? Math.round(jpy * rate) : 0;
+    }
+
+    // 底部選單切換
+    function switchNav(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
       window.scrollTo(0, 0);
     }
 
-    // 3. 行程 Day 切換
-    function showDay(dayNum) {
-      document.querySelectorAll('.day-content').forEach(d => d.style.display = 'none');
-      document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-      
-      document.getElementById(`day-${dayNum}`).style.display = 'block';
-      event.target.classList.add('active');
-    }
-
-    // 4. 彈性選項切換 (Option 1 / Option 2)
-    function switchOpt(optId, btn) {
-      const container = btn.closest('.option-container');
-      container.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
-      container.querySelectorAll('.opt-content').forEach(c => c.classList.remove('active'));
-      
-      btn.classList.add('active');
-      document.getElementById(optId).classList.add('active');
-    }
-
-    // 5. 簡單匯率試算
-    function convertCurrency() {
-      const jpy = document.getElementById('jpy-input').value;
-      const twd = (jpy * 0.215).toFixed(0);
-      document.getElementById('twd-result').innerText = jpy ? twd : 0;
-    }
-
-    // 6. 天氣資料示意
-    const cities = [
-      { name: '岡山', temp: '18°C / 10°C', status: '☀️ 晴時多雲' },
-      { name: '鳥取', temp: '16°C / 8°C', status: '🌤️ 多雲' },
-      { name: '米子/境港', temp: '15°C / 9°C', status: '🌧️ 短暫雨' },
-      { name: '倉敷', temp: '17°C / 10°C', status: '☀️ 晴朗' }
-    ];
-
-    const weatherList = document.getElementById('weather-list');
-    cities.forEach(c => {
-      weatherList.innerHTML += `
-        <div class="weather-card">
-          <div class="weather-info">
-            <strong style="font-size:1.05rem;">${c.name}</strong>
-            <span style="font-size:0.85rem; color:var(--text-muted);">${c.status}</span>
-          </div>
-          <div class="weather-temp">${c.temp}</div>
-        </div>
-      `;
-    });
+    // 啟動
+    window.onload = initApp;
   </script>
 </body>
 </html>
