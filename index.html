@@ -1,77 +1,634 @@
-<!-- 日系溫暖風格範例結構 -->
-<style>
-  :root {
-    --bg-color: #fcf8f2; /* 暖米色背景 */
-    --card-bg: #ffffff;  /* 卡片白底 */
-    --primary-color: #8c7355; /* 大地棕色 */
-    --accent-color: #e6c594;  /* 奶茶色 */
-    --text-color: #4a4238;    /* 深灰褐色文字 */
-    --tag-bg: #f3ece1;       /* 標籤淡色 */
-  }
-  
-  body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: "Noto Serif TC", serif, system-ui;
-  }
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2026 岡山鳥取 8 日自由行手帳</title>
+  <!-- Google Fonts: 圓體與襯線體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f7f3ed;       /* 溫暖日系米色背景 */
+      --card-bg: #ffffff;        /* 純白卡片背景 */
+      --primary: #8c7355;        /* 大地咖啡棕 */
+      --primary-light: #f1ebd9;  /* 淺大地色標籤 */
+      --accent: #d9a05b;         /* 暖木橘/點綴色 */
+      --text: #4a4238;           /* 深灰色文字 */
+      --text-muted: #8c8275;     /* 輔助文字灰色 */
+      --border: #e8e2d8;         /* 淡色邊框 */
+      --shadow: rgba(140, 115, 85, 0.08);
+      --nav-height: 65px;
+    }
 
-  /* 行程卡片 */
-  .itinerary-card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 12px rgba(140, 115, 85, 0.08);
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  /* 分歧選項按鈕 (Option 1 & 2) */
-  .option-toggle {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .option-btn {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid var(--accent-color);
-    border-radius: 8px;
-    background: var(--bg-color);
-    color: var(--primary-color);
-    cursor: pointer;
-    font-weight: bold;
-  }
-  .option-btn.active {
-    background: var(--primary-color);
-    color: white;
-  }
-</style>
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      font-family: 'Zen Maru Gothic', 'Noto Serif TC', sans-serif;
+      padding-bottom: calc(var(--nav-height) + 20px);
+      line-height: 1.6;
+    }
 
-<!-- 範例：分歧行程選擇元件 -->
-<div class="itinerary-card">
-  <div class="time">14:00 - 17:00</div>
-  <h4>下午彈性行程（選擇方案）</h4>
-  
-  <div class="option-toggle">
-    <button class="option-btn active" onclick="switchOption(1)">選項 1：鳥取砂丘</button>
-    <button class="option-btn" onclick="switchOption(2)">選項 2：雨天備案 - 美術館</button>
-  </div>
+    /* 頂部 Header & 倒數小工具 */
+    header {
+      background: linear-gradient(135deg, #e8dfd3 0%, #f7f3ed 100%);
+      padding: 24px 20px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
 
-  <div id="option-content-1" class="option-content" style="margin-top: 12px;">
-    <p>☀️ 天氣晴朗時推薦！搭乘巴士前往鳥取砂丘，體驗騎駱駝與搭纜車觀海。</p>
-    <a href="https://maps.google.com" target="_blank">📍 開啟導航</a>
-  </div>
+    h1 {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
 
-  <div id="option-content-2" class="option-content" style="display:none; margin-top: 12px;">
-    <p>🌧️ 若下雨則改前往渡邊美術館，欣賞日本刀劍與歷史古物展覽。</p>
-  </div>
-</div>
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
 
-<script>
-  function switchOption(optionNum) {
-    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.option-content').forEach(content => content.style.display = 'none');
-    
-    event.target.classList.add('active');
-    document.getElementById(`option-content-${optionNum}`).style.style.display = 'block';
-  }
-</script>
+    .countdown-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px dashed var(--accent);
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--primary);
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    /* 頁面分頁切換 */
+    .tab-content {
+      display: none;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 天數滑動選擇器 (Day Selector) */
+    .day-selector {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 16px;
+      background: var(--bg-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+
+    .day-selector::-webkit-scrollbar {
+      display: none;
+    }
+
+    .day-btn {
+      flex: 0 0 auto;
+      padding: 6px 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* 手帳風行程卡片 */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+      margin-top: 12px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 10px;
+      bottom: 10px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .spot-card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px var(--shadow);
+      border: 1px solid rgba(232, 226, 216, 0.6);
+    }
+
+    .spot-card::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 20px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--card-bg);
+    }
+
+    .spot-time {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .spot-title {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .spot-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      border-radius: 6px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      color: var(--primary);
+      text-decoration: none;
+      background: #fdfaf5;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* 彈性選項按鈕 (Option 1 & 2) */
+    .option-container {
+      margin-top: 10px;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+
+    .option-btns {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .opt-btn {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-color);
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .opt-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .opt-content {
+      display: none;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: #faf6f0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .opt-content.active {
+      display: block;
+    }
+
+    /* 天氣分頁卡片 */
+    .weather-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .weather-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .weather-temp {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    /* 清單與記帳樣式 */
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 6px var(--shadow);
+    }
+
+    .checklist-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    /* 工具類輸入框 */
+    .tool-box {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .tool-box input, .tool-box select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+
+    /* 底部導覽橫幅 (Bottom Navigation) */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 20%;
+    }
+
+    .nav-item icon {
+      font-size: 1.25rem;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部標頭與倒數計時 -->
+  <header>
+    <h1>岡山鳥取 8 日自由行</h1>
+    <div class="subtitle">2026.11.08 ➔ 2026.11.15</div>
+    <div class="countdown-card">
+      ⏳ 距離出發還有 <span id="countdown">--</span> 天
+    </div>
+  </header>
+
+  <!-- 1. 天氣分頁 -->
+  <section id="tab-weather" class="tab-content">
+    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">☀️ 行程各城市氣象預報</h2>
+    <div id="weather-list">
+      <!-- 自動產出天氣卡片 -->
+    </div>
+  </section>
+
+  <!-- 2. 準備分頁 -->
+  <section id="tab-prepare" class="tab-content">
+    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">📋 行前準備 Checklist</h2>
+    <div id="checklist-container">
+      <div class="checklist-item"><input type="checkbox" id="c1"><label for="c1">護照（效期 6 個月以上）</label></div>
+      <div class="checklist-item"><input type="checkbox" id="c2"><label for="c2">Visit Japan Web 入境卡填寫</label></div>
+      <div class="checklist-item"><input type="checkbox" id="c3"><label for="c3">JR 山陰&山陽 7日 Pass 兌換券</label></div>
+      <div class="checklist-item"><input type="checkbox" id="c4"><label for="c4">日圓現金（現場購票/備用）</label></div>
+      <div class="checklist-item"><input type="checkbox" id="c5"><label for="c5">網卡 / eSIM 設定完成</label></div>
+      <div class="checklist-item"><input type="checkbox" id="c6"><label for="c6">保暖衣物與折傘（山陰溫差大）</label></div>
+    </div>
+  </section>
+
+  <!-- 3. 行程分頁 (預設頁) -->
+  <section id="tab-itinerary" class="tab-content active">
+    <!-- Day 選擇器 -->
+    <div class="day-selector">
+      <button class="day-btn active" onclick="showDay(1)">Day 1 (11/08)</button>
+      <button class="day-btn" onclick="showDay(2)">Day 2 (11/09)</button>
+      <button class="day-btn" onclick="showDay(3)">Day 3 (11/10)</button>
+      <button class="day-btn" onclick="showDay(4)">Day 4 (11/11)</button>
+      <button class="day-btn" onclick="showDay(5)">Day 5 (11/12)</button>
+      <button class="day-btn" onclick="showDay(6)">Day 6 (11/13)</button>
+      <button class="day-btn" onclick="showDay(7)">Day 7 (11/14)</button>
+      <button class="day-btn" onclick="showDay(8)">Day 8 (11/15)</button>
+    </div>
+
+    <!-- Day 1 行程 -->
+    <div id="day-1" class="day-content">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">13:05 - 16:30</div>
+          <div class="spot-title">✈️ 桃園國際機場 ➔ 岡山桃太郎機場</div>
+          <div class="spot-desc">虎航 IT714 航班（飛行時間 2h25m）</div>
+          <span class="badge">航班</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-time">17:30 - 18:00</div>
+          <div class="spot-title">🚌 岡山機場 ➔ JR 岡山站</div>
+          <div class="spot-desc">搭乘接駁巴士（約 780 日圓，可刷電子卡）</div>
+          <span class="badge">交通</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-time">18:00 - 18:40</div>
+          <div class="spot-title">🎫 兌換 JR Pass 7日券與劃位</div>
+          <div class="spot-desc">JR 岡山站綠色窗口/售票機兌換 Pass</div>
+          <span class="badge">票券</span>
+        </div>
+        <div class="spot-card">
+          <div class="spot-time">20:19 - 22:10</div>
+          <div class="spot-title">🚆 JR 岡山站 ➔ JR 鳥取站</div>
+          <div class="spot-desc">特急 Super Inaba 11號 (車程約 1h51m)
+💡 列車折返提醒：行駛至「上郡站」時會折返，全車乘客會自行轉向座椅。</div>
+          <span class="badge">JR 特急</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 2 行程 (含彈性選項) -->
+    <div id="day-2" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">09:00 - 12:30</div>
+          <div class="spot-title">🐪 鳥取砂丘 & 駱駝體驗</div>
+          <div class="spot-desc">日本最大海岸砂丘，可搭乘觀光纜車與體驗騎駱駝。</div>
+          
+          <!-- 彈性選項 -->
+          <div class="option-container">
+            <div style="font-size:0.78rem; color:var(--primary); font-weight:bold; margin-bottom:4px;">🔀 午後彈性備案選擇：</div>
+            <div class="option-btns">
+              <button class="opt-btn active" onclick="switchOpt('d2-1', this)">選項 1：砂丘會館/纜車</button>
+              <button class="opt-btn" onclick="switchOpt('d2-2', this)">選項 2：雨天備案美術館</button>
+            </div>
+            <div id="d2-1" class="opt-content active">
+              ☀️ 晴天行程：於砂丘會館享用海鮮丼飯、梨子冰淇淋，並搭乘纜車前往展望台觀海。
+            </div>
+            <div id="d2-2" class="opt-content">
+              🌧️ 雨天備案：前往「砂之美術館」欣賞世界頂級沙雕，或參觀渡邊美術館。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day 3 ~ 8 占位預設結構 -->
+    <div id="day-3" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">全天</div>
+          <div class="spot-title">⛩️ 白兔神社 & 若櫻鐵道懷舊之旅</div>
+          <div class="spot-desc">造訪姻緣白兔神社，體驗若櫻線木造復古車站散策。</div>
+        </div>
+      </div>
+    </div>
+    <div id="day-4" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">全天</div>
+          <div class="spot-title">👻 境港鬼太郎水木茂大道 & 鳥取花回廊</div>
+          <div class="spot-desc">漫步鬼太郎妖怪大街，下午前往足立美術館欣賞連續20年日本第一庭園。</div>
+        </div>
+      </div>
+    </div>
+    <div id="day-5" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">全天</div>
+          <div class="spot-title">🕵️ 柯南小鎮 (由良) & 倉吉白壁土藏群</div>
+          <div class="spot-desc">青山剛昌故鄉館巡禮，下午至倉吉白壁體驗石臼咖啡與赤瓦老街。</div>
+        </div>
+      </div>
+    </div>
+    <div id="day-6" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">全天</div>
+          <div class="spot-title">🏯 岡山後樂園 & 岡山城名勝散策</div>
+          <div class="spot-desc">走訪日本三大名園之一後樂園，傍晚至表町商店街與 AEON Mall 採買。</div>
+        </div>
+      </div>
+    </div>
+    <div id="day-7" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">全天</div>
+          <div class="spot-title">🚣 倉敷美觀地區 & 兒島牛仔褲街</div>
+          <div class="spot-desc">倉敷川搭乘小舟、造訪阿智神社與 mt 紙膠帶專賣店，延伸至兒島丹寧街。</div>
+        </div>
+      </div>
+    </div>
+    <div id="day-8" class="day-content" style="display:none;">
+      <div class="timeline">
+        <div class="spot-card">
+          <div class="spot-time">10:00 - 13:00</div>
+          <div class="spot-title">🍑 吉備津神社 & 返台</div>
+          <div class="spot-desc">參觀桃太郎傳說的 360 公尺大迴廊，隨後搭巴士至岡山機場搭乘 IT215 返回台北。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 工具分頁 -->
+  <section id="tab-tools" class="tab-content">
+    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">🧮 日幣換算與簡易記帳</h2>
+    <div class="tool-box">
+      <label>💴 日圓金額 (JPY)：</label>
+      <input type="number" id="jpy-input" placeholder="例如：1000" oninput="convertCurrency()">
+      <div>約合台幣 (TWD)：<strong id="twd-result" style="color:var(--accent);">0</strong> 元 (匯率約 0.215)</div>
+    </div>
+  </section>
+
+  <!-- 5. 資源分頁 -->
+  <section id="tab-resources" class="tab-content">
+    <h2 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">🔗 實用連結與備忘</h2>
+    <div class="spot-card">
+      <div class="spot-title"> Visit Japan Web</div>
+      <div class="spot-desc">電子入境卡與海關申報</div>
+      <a href="https://vjw-lp.digital.go.jp/" target="_blank" class="map-link">開啟網站</a>
+    </div>
+    <div class="spot-card">
+      <div class="spot-title">🚄 JR 西日本時刻表</div>
+      <div class="spot-desc">查詢 Super Inaba 與山陰特急班次</div>
+      <a href="https://www.westjr.co.jp/global/tc/" target="_blank" class="map-link">開啟網站</a>
+    </div>
+  </section>
+
+  <!-- 底部固定導覽列（順序：天氣 -> 準備 -> 行程 -> 工具 -> 資源） -->
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="switchTab('tab-weather', this)">
+      <span style="font-size:1.2rem;">☀️</span>
+      <span>天氣</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-prepare', this)">
+      <span style="font-size:1.2rem;">📋</span>
+      <span>準備</span>
+    </button>
+    <button class="nav-item active" onclick="switchTab('tab-itinerary', this)">
+      <span style="font-size:1.2rem;">🗺️</span>
+      <span>行程</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-tools', this)">
+      <span style="font-size:1.2rem;">🧮</span>
+      <span>工具</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('tab-resources', this)">
+      <span style="font-size:1.2rem;">🔗</span>
+      <span>資源</span>
+    </button>
+  </nav>
+
+  <script>
+    // 1. 出發倒數計時
+    function updateCountdown() {
+      const targetDate = new Date('2026-11-08T00:00:00');
+      const now = new Date();
+      const diff = Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
+      document.getElementById('countdown').innerText = diff > 0 ? diff : 0;
+    }
+    updateCountdown();
+
+    // 2. 底部 Tab 切換
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // 3. 行程 Day 切換
+    function showDay(dayNum) {
+      document.querySelectorAll('.day-content').forEach(d => d.style.display = 'none');
+      document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(`day-${dayNum}`).style.display = 'block';
+      event.target.classList.add('active');
+    }
+
+    // 4. 彈性選項切換 (Option 1 / Option 2)
+    function switchOpt(optId, btn) {
+      const container = btn.closest('.option-container');
+      container.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.opt-content').forEach(c => c.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById(optId).classList.add('active');
+    }
+
+    // 5. 簡單匯率試算
+    function convertCurrency() {
+      const jpy = document.getElementById('jpy-input').value;
+      const twd = (jpy * 0.215).toFixed(0);
+      document.getElementById('twd-result').innerText = jpy ? twd : 0;
+    }
+
+    // 6. 天氣資料示意
+    const cities = [
+      { name: '岡山', temp: '18°C / 10°C', status: '☀️ 晴時多雲' },
+      { name: '鳥取', temp: '16°C / 8°C', status: '🌤️ 多雲' },
+      { name: '米子/境港', temp: '15°C / 9°C', status: '🌧️ 短暫雨' },
+      { name: '倉敷', temp: '17°C / 10°C', status: '☀️ 晴朗' }
+    ];
+
+    const weatherList = document.getElementById('weather-list');
+    cities.forEach(c => {
+      weatherList.innerHTML += `
+        <div class="weather-card">
+          <div class="weather-info">
+            <strong style="font-size:1.05rem;">${c.name}</strong>
+            <span style="font-size:0.85rem; color:var(--text-muted);">${c.status}</span>
+          </div>
+          <div class="weather-temp">${c.temp}</div>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
