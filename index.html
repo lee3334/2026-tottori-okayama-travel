@@ -1,0 +1,77 @@
+<!-- 日系溫暖風格範例結構 -->
+<style>
+  :root {
+    --bg-color: #fcf8f2; /* 暖米色背景 */
+    --card-bg: #ffffff;  /* 卡片白底 */
+    --primary-color: #8c7355; /* 大地棕色 */
+    --accent-color: #e6c594;  /* 奶茶色 */
+    --text-color: #4a4238;    /* 深灰褐色文字 */
+    --tag-bg: #f3ece1;       /* 標籤淡色 */
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: "Noto Serif TC", serif, system-ui;
+  }
+
+  /* 行程卡片 */
+  .itinerary-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(140, 115, 85, 0.08);
+  }
+
+  /* 分歧選項按鈕 (Option 1 & 2) */
+  .option-toggle {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .option-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .option-btn.active {
+    background: var(--primary-color);
+    color: white;
+  }
+</style>
+
+<!-- 範例：分歧行程選擇元件 -->
+<div class="itinerary-card">
+  <div class="time">14:00 - 17:00</div>
+  <h4>下午彈性行程（選擇方案）</h4>
+  
+  <div class="option-toggle">
+    <button class="option-btn active" onclick="switchOption(1)">選項 1：鳥取砂丘</button>
+    <button class="option-btn" onclick="switchOption(2)">選項 2：雨天備案 - 美術館</button>
+  </div>
+
+  <div id="option-content-1" class="option-content" style="margin-top: 12px;">
+    <p>☀️ 天氣晴朗時推薦！搭乘巴士前往鳥取砂丘，體驗騎駱駝與搭纜車觀海。</p>
+    <a href="https://maps.google.com" target="_blank">📍 開啟導航</a>
+  </div>
+
+  <div id="option-content-2" class="option-content" style="display:none; margin-top: 12px;">
+    <p>🌧️ 若下雨則改前往渡邊美術館，欣賞日本刀劍與歷史古物展覽。</p>
+  </div>
+</div>
+
+<script>
+  function switchOption(optionNum) {
+    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.option-content').forEach(content => content.style.display = 'none');
+    
+    event.target.classList.add('active');
+    document.getElementById(`option-content-${optionNum}`).style.style.display = 'block';
+  }
+</script>
