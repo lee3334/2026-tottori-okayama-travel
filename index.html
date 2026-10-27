@@ -205,7 +205,6 @@
       border-radius: 12px;
     }
 
-    /* 置頂簡略路線懶人包 */
     .summary-flow-box {
       background: #f2ebd9;
       border-left: 4px solid var(--accent);
@@ -254,7 +253,6 @@
       background: #d8cebc;
     }
 
-    /* 主要行程卡片 */
     .spot-card {
       position: relative;
       background: var(--card-bg);
@@ -278,7 +276,6 @@
       border: 2px solid var(--bg-color);
     }
 
-    /* 次要步驟/轉乘子卡片 (縮排效果) */
     .spot-card.sub-spot {
       background: rgba(253, 251, 247, 0.65);
       border: 1px dashed #ded4c1;
@@ -301,7 +298,6 @@
       margin-bottom: 6px;
     }
 
-    /* 放大顯眼的時間標籤 */
     .spot-time {
       font-size: 1.02rem;
       font-weight: 700;
@@ -419,6 +415,52 @@
       box-shadow: 0 2px 6px var(--shadow);
     }
 
+    /* 可收合交通筆記卡片樣式 */
+    details.transport-details {
+      background: #faf6ed;
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 10px var(--shadow);
+    }
+
+    details.transport-details summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.02rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+    }
+
+    details.transport-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .transport-day-block {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed #e2d7c3;
+    }
+
+    .transport-day-title {
+      font-weight: 700;
+      color: #8c3a2b;
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+
+    .transport-item-row {
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+      padding-left: 8px;
+      border-left: 2px solid var(--accent);
+    }
+
     .tool-input {
       width: 100%;
       padding: 10px;
@@ -524,7 +566,17 @@
 
   <!-- 資源分頁 -->
   <section id="tab-resources" class="tab-content">
-    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結資源</h3>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結與交通攻略</h3>
+    
+    <!-- 頂部可收合 8 日交通速查卡片 -->
+    <details class="transport-details">
+      <summary>
+        <span>🚆 8 日交通 IC 卡 / Pass 使用攻略</span>
+        <span style="font-size:0.78rem; color:var(--accent); font-weight:normal;">點擊展開 / 收合 ▾</span>
+      </summary>
+      <div id="transport-note-container"></div>
+    </details>
+
     <div id="resources-container"></div>
 
     <div class="list-item-card" style="margin-top:20px; background:#f4eee2;">
@@ -768,6 +820,28 @@
     }
 
     function renderResourcesTab() {
+      // 渲染頂部交通筆記
+      const tContainer = document.getElementById('transport-note-container');
+      if (data.transportNote && tContainer) {
+        tContainer.innerHTML = '';
+        data.transportNote.forEach(dNote => {
+          let itemsHtml = dNote.items.map(it => `
+            <div class="transport-item-row">
+              <strong>${it.name}</strong>
+              ${it.note ? `<br><span style="color:#8c3a2b; font-size:0.8rem;">${it.note}</span>` : ''}
+            </div>
+          `).join('');
+
+          tContainer.innerHTML += `
+            <div class="transport-day-block">
+              <div class="transport-day-title">${dNote.day}</div>
+              ${itemsHtml}
+            </div>
+          `;
+        });
+      }
+
+      // 渲染外部資源連結
       const container = document.getElementById('resources-container');
       container.innerHTML = '';
 
