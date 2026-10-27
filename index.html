@@ -5,25 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>岡山鳥取八日自由行</title>
   
-  <!-- Google Fonts: 思源宋體 (Noto Serif TC) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   
-  <!-- 載入行程資料檔 -->
   <script src="js/data.js"></script>
 
   <style>
     :root {
-      --bg-color: #f6f2ea;        /* 米奶茶色背景 */
-      --card-bg: #fdfbf7;       /* 溫暖柔和白卡片 */
-      --primary: #3c3228;        /* 沉穩深灰褐 */
-      --primary-light: #eae3d2;  /* 柔和奶茶標籤 */
-      --accent: #9a7342;         /* 典雅木質棕 */
-      --text: #3c3228;           /* 主要文字 */
-      --text-muted: #887c6e;     /* 次要淡灰色 */
-      --border: #e6dec8;         /* 淡外框 */
-      --dark-card: #2f2720;      /* 選中狀態深色卡片 */
+      --bg-color: #f6f2ea;        
+      --card-bg: #fdfbf7;       
+      --primary: #3c3228;        
+      --primary-light: #eae3d2;  
+      --accent: #9a7342;         
+      --text: #3c3228;           
+      --text-muted: #887c6e;     
+      --border: #e6dec8;         
+      --dark-card: #2f2720;      
       --shadow: rgba(60, 50, 40, 0.05);
       --nav-height: 64px;
     }
@@ -43,7 +41,6 @@
       line-height: 1.6;
     }
 
-    /* 頂部標題（修正不換行、移除名字） */
     header {
       padding: 24px 20px 12px;
       max-width: 600px;
@@ -58,7 +55,7 @@
       font-weight: 700;
       color: var(--primary);
       letter-spacing: 1px;
-      white-space: nowrap; /* 強制單列不換行 */
+      white-space: nowrap;
     }
 
     .header-sub {
@@ -68,7 +65,6 @@
       white-space: nowrap;
     }
 
-    /* 大格日曆滑動卡片 */
     .date-slider-container {
       max-width: 600px;
       margin: 0 auto 16px;
@@ -146,7 +142,6 @@
       color: #ffffff !important;
     }
 
-    /* 頁面分頁 */
     .tab-content {
       display: none;
       padding: 0 16px;
@@ -164,12 +159,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 當日主題卡片 */
     .hero-day-card {
       background: var(--card-bg);
       border-radius: 20px;
       padding: 20px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       border: 1px solid var(--border);
       box-shadow: 0 4px 12px var(--shadow);
     }
@@ -197,7 +191,7 @@
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .weather-info-bar {
@@ -211,7 +205,29 @@
       border-radius: 12px;
     }
 
-    /* 大交通/航班卡片 */
+    /* 置頂簡略路線懶人包 */
+    .summary-flow-box {
+      background: #f2ebd9;
+      border-left: 4px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      color: var(--primary);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .vjw-box {
+      background: #ffffff;
+      border: 1px dashed var(--accent);
+      padding: 10px 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      color: var(--primary);
+    }
+
     .flight-banner {
       background: #ffffff;
       border-radius: 14px;
@@ -223,7 +239,6 @@
       box-shadow: 0 2px 6px var(--shadow);
     }
 
-    /* 時間軸行程列表 */
     .timeline {
       position: relative;
       padding-left: 20px;
@@ -239,6 +254,7 @@
       background: #d8cebc;
     }
 
+    /* 主要行程卡片 */
     .spot-card {
       position: relative;
       background: var(--card-bg);
@@ -247,6 +263,7 @@
       margin-bottom: 14px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 8px var(--shadow);
+      transition: all 0.2s;
     }
 
     .spot-card::before {
@@ -254,39 +271,72 @@
       position: absolute;
       left: -20px;
       top: 22px;
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--bg-color);
-      border: 2px solid #887c6e;
+      background: #8c3a2b;
+      border: 2px solid var(--bg-color);
+    }
+
+    /* 次要步驟/轉乘子卡片 (縮排效果) */
+    .spot-card.sub-spot {
+      background: rgba(253, 251, 247, 0.65);
+      border: 1px dashed #ded4c1;
+      padding: 12px 14px;
+      margin-left: 12px;
+      box-shadow: none;
+    }
+
+    .spot-card.sub-spot::before {
+      background: #a89d8e;
+      width: 6px;
+      height: 6px;
+      left: -26px;
     }
 
     .spot-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 6px;
     }
 
+    /* 放大顯眼的時間標籤 */
     .spot-time {
-      font-size: 0.82rem;
-      color: var(--text-muted);
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #8c3a2b;
+      background: #f4eee2;
+      padding: 3px 10px;
+      border-radius: 8px;
       font-family: 'Playfair Display', serif;
+      letter-spacing: 0.5px;
+    }
+
+    .spot-card.sub-spot .spot-time {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: #eee8d8;
     }
 
     .spot-tag {
       background: #5c5246;
       color: #fff;
-      font-size: 0.7rem;
-      padding: 1px 7px;
+      font-size: 0.72rem;
+      padding: 2px 8px;
       border-radius: 6px;
     }
 
     .spot-title {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--primary);
       margin-bottom: 6px;
+    }
+
+    .spot-card.sub-spot .spot-title {
+      font-size: 0.96rem;
+      color: #5d5245;
     }
 
     .spot-desc {
@@ -318,7 +368,6 @@
       margin-top: 8px;
     }
 
-    /* 備選方案 (Option 1 & Option 2) */
     .options-box {
       margin-top: 10px;
       border-top: 1px dashed var(--border);
@@ -361,7 +410,6 @@
       display: block;
     }
 
-    /* 列表與工具輸入框 */
     .list-item-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -393,7 +441,6 @@
       width: 100%;
     }
 
-    /* 底部導覽橫幅 (Bottom Navigation) */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
@@ -434,7 +481,6 @@
 </head>
 <body>
 
-  <!-- 頂部標題列 -->
   <header>
     <div class="header-title">
       <h1 id="app-title">岡山鳥取八日自由行</h1>
@@ -442,29 +488,31 @@
     <div class="header-sub" id="app-sub">2026.11.08 － 11.15</div>
   </header>
 
-  <!-- 1. 太陽/天氣分頁 -->
+  <!-- 天氣分頁 -->
   <section id="tab-weather" class="tab-content">
     <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">☀️ 網路實時氣象預報 (API 串接)</h3>
     <div id="weather-cards-container">載入最新天氣資訊中...</div>
   </section>
 
-  <!-- 2. 準備分頁 -->
+  <!-- 準備分頁 -->
   <section id="tab-prepare" class="tab-content">
     <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">📋 行前準備清單</h3>
     <div id="prepare-list-container"></div>
   </section>
 
-  <!-- 3. 行程分頁 (預設頁) -->
+  <!-- 行程分頁 (預設) -->
   <section id="tab-itinerary" class="tab-content active">
     <div class="date-slider-container">
       <div class="date-slider" id="date-slider"></div>
     </div>
     <div id="hero-day-area"></div>
+    <div id="summary-flow-area"></div>
+    <div id="vjw-area"></div>
     <div id="flight-banner-area"></div>
     <div class="timeline" id="spots-timeline"></div>
   </section>
 
-  <!-- 4. 工具分頁 -->
+  <!-- 工具分頁 -->
   <section id="tab-tools" class="tab-content">
     <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🧮 試算與工具</h3>
     <div class="list-item-card">
@@ -474,7 +522,7 @@
     </div>
   </section>
 
-  <!-- 5. 資源分頁 (支援動態線上新增連結) -->
+  <!-- 資源分頁 -->
   <section id="tab-resources" class="tab-content">
     <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結資源</h3>
     <div id="resources-container"></div>
@@ -487,7 +535,7 @@
     </div>
   </section>
 
-  <!-- 底部選單（順序：天氣 ➔ 準備 ➔ 行程 ➔ 工具 ➔ 資源） -->
+  <!-- 底部選單 -->
   <nav class="bottom-nav">
     <button class="nav-btn" onclick="switchNav('tab-weather', this)">
       <span class="icon">☀️</span>
@@ -523,7 +571,7 @@
 
       renderDateSlider();
       renderDayContent(0);
-      fetchLiveWeather(); // 動態抓取實時天氣
+      fetchLiveWeather();
       renderPrepareTab();
       renderResourcesTab();
     }
@@ -562,10 +610,33 @@
           </div>
           <div class="headline-title">${day.headline}</div>
           <div class="weather-info-bar">
-            <span id="hero-weather-text">☀️ ${day.location} · 載入最新天氣中...</span>
+            <span id="hero-weather-text">🌤️ ${day.location} · 載入最新天氣中...</span>
           </div>
         </div>
       `;
+
+      const summaryArea = document.getElementById('summary-flow-area');
+      if (day.summaryFlow) {
+        summaryArea.innerHTML = `
+          <div class="summary-flow-box">
+            📍 今日路線總覽：<br>${day.summaryFlow}
+          </div>
+        `;
+      } else {
+        summaryArea.innerHTML = '';
+      }
+
+      const vjwArea = document.getElementById('vjw-area');
+      if (day.vjwAddress) {
+        vjwArea.innerHTML = `
+          <div class="vjw-box">
+            <strong>📝 Visit Japan Web 填寫用飯店地址：</strong>
+            <pre style="font-family:inherit; white-space:pre-wrap; margin-top:4px; font-size:0.8rem; color:#554a3e;">${day.vjwAddress}</pre>
+          </div>
+        `;
+      } else {
+        vjwArea.innerHTML = '';
+      }
 
       updateHeroWeather(day.lat, day.lon, day.location);
 
@@ -586,29 +657,32 @@
             <div class="options-box">
               <div class="opt-btn-group">
                 ${spot.options.map((opt, oIdx) => `
-                  <button class="opt-btn ${oIdx === 0 ? 'active' : ''}" onclick="toggleOpt(${sIdx},${oIdx}, this)">
+                  <button class="opt-btn ${oIdx === 0 ? 'active' : ''}" onclick="toggleOpt(${sIdx}, ${oIdx}, this)">
                     ${opt.name.split('：')[0]}
                   </button>
                 `).join('')}
               </div>
               ${spot.options.map((opt, oIdx) => `
-                <div class="opt-panel opt-panel-${sIdx}${oIdx === 0 ? 'active' : ''}" id="opt-p-${sIdx}-${oIdx}">
+                <div class="opt-panel opt-panel-${sIdx} ${oIdx === 0 ? 'active' : ''}" id="opt-p-${sIdx}-${oIdx}">
                   <strong>${opt.name}</strong><br>${opt.desc}
+                  ${opt.navLink ? `<br><a href="${opt.navLink}" target="_blank" class="btn-nav" style="margin-top:6px;">📍 開啟專屬連結</a>` : ''}
                 </div>
               `).join('')}
             </div>
           `;
         }
 
+        const subClass = spot.isSub ? 'sub-spot' : '';
+
         timeline.innerHTML += `
-          <div class="spot-card">
+          <div class="spot-card ${subClass}">
             <div class="spot-header">
               <span class="spot-time">${spot.time}</span>
               ${spot.tag ? `<span class="spot-tag">${spot.tag}</span>` : ''}
             </div>
             <div class="spot-title">${spot.title}</div>
             <div class="spot-desc">${spot.desc}</div>
-            ${spot.cost ? `<div style="font-size:0.8rem; color:var(--accent); font-weight:bold;">預估費用：${spot.cost}</div>` : ''}
+            ${spot.cost ? `<div style="font-size:0.82rem; color:var(--accent); font-weight:bold;">預估費用：${spot.cost}</div>` : ''}
             ${spot.tip ? `<div class="tip-box">${spot.tip}</div>` : ''}
             ${spot.navLink ? `<a href="${spot.navLink}" target="_blank" class="btn-nav">📍 開啟導航 / 連結</a>` : ''}
             ${optHtml}
@@ -626,7 +700,6 @@
       document.getElementById(`opt-p-${spotIdx}-${optIdx}`).classList.add('active');
     }
 
-    // 網路實時 API 串接 (Open-Meteo API)
     async function updateHeroWeather(lat, lon, locationName) {
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo`);
@@ -698,7 +771,6 @@
       const container = document.getElementById('resources-container');
       container.innerHTML = '';
 
-      // 1. 預設資源
       data.resources.forEach(res => {
         container.innerHTML += `
           <div class="list-item-card">
@@ -709,7 +781,6 @@
         `;
       });
 
-      // 2. 讀取使用者自訂新增的連結 (LocalStorage)
       const customRes = JSON.parse(localStorage.getItem('my_custom_resources') || '[]');
       customRes.forEach(res => {
         container.innerHTML += `
@@ -722,7 +793,6 @@
       });
     }
 
-    // 線上動態新增自訂連結功能
     function addCustomResource() {
       const title = document.getElementById('new-res-title').value.trim();
       const url = document.getElementById('new-res-url').value.trim();
