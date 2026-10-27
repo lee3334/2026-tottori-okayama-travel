@@ -205,26 +205,29 @@
       border-radius: 12px;
     }
 
+    /* 放大置頂「今日路線總覽」卡片 */
     .summary-flow-box {
       background: #f2ebd9;
-      border-left: 4px solid var(--accent);
-      padding: 10px 14px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-size: 0.85rem;
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      font-size: 0.98rem;
       color: var(--primary);
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.6;
+      box-shadow: 0 2px 8px var(--shadow);
     }
 
     .vjw-box {
       background: #ffffff;
       border: 1px dashed var(--accent);
-      padding: 10px 14px;
-      border-radius: 12px;
+      padding: 12px 16px;
+      border-radius: 14px;
       margin-bottom: 16px;
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       color: var(--primary);
+      box-shadow: 0 2px 6px var(--shadow);
     }
 
     .flight-banner {
@@ -233,7 +236,7 @@
       padding: 12px 16px;
       margin-bottom: 16px;
       border: 1px solid var(--border);
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       color: var(--primary);
       box-shadow: 0 2px 6px var(--shadow);
     }
@@ -415,13 +418,13 @@
       box-shadow: 0 2px 6px var(--shadow);
     }
 
-    /* 可收合交通筆記卡片樣式 */
+    /* 可收合卡片通用樣式 */
     details.transport-details {
       background: #faf6ed;
       border: 1px solid var(--accent);
       border-radius: 16px;
       padding: 14px 16px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       box-shadow: 0 3px 10px var(--shadow);
     }
 
@@ -449,16 +452,17 @@
     .transport-day-title {
       font-weight: 700;
       color: #8c3a2b;
-      font-size: 0.92rem;
-      margin-bottom: 4px;
+      font-size: 0.94rem;
+      margin-bottom: 6px;
     }
 
     .transport-item-row {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       color: var(--primary);
-      margin-bottom: 6px;
-      padding-left: 8px;
-      border-left: 2px solid var(--accent);
+      margin-bottom: 8px;
+      padding-left: 10px;
+      border-left: 3px solid var(--accent);
+      white-space: pre-line;
     }
 
     .tool-input {
@@ -566,12 +570,30 @@
 
   <!-- 資源分頁 -->
   <section id="tab-resources" class="tab-content">
-    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結與交通攻略</h3>
+    <h3 style="font-size:1.05rem; margin-bottom:12px; color:var(--primary);">🔗 實用連結與秘笈筆記</h3>
     
-    <!-- 頂部可收合 8 日交通速查卡片 -->
+    <!-- 收合卡片 1：💡 行程小提醒 -->
     <details class="transport-details">
       <summary>
-        <span>🚆 8 日交通 IC 卡 / Pass 使用攻略</span>
+        <span>💡 行程小提醒（氣候/神社/Pass/景點）</span>
+        <span style="font-size:0.78rem; color:var(--accent); font-weight:normal;">點擊展開 / 收合 ▾</span>
+      </summary>
+      <div id="trip-tips-container"></div>
+    </details>
+
+    <!-- 收合卡片 2：📝 JR Pass 搭乘電車與劃位懶人包 -->
+    <details class="transport-details">
+      <summary>
+        <span>📝 JR Pass 搭乘電車與劃位懶人包</span>
+        <span style="font-size:0.78rem; color:var(--accent); font-weight:normal;">點擊展開 / 收合 ▾</span>
+      </summary>
+      <div id="jr-pass-container"></div>
+    </details>
+
+    <!-- 收合卡片 3：🚆 8 日交通 IC 卡 / Pass 使用攻略 -->
+    <details class="transport-details">
+      <summary>
+        <span>🚆 8 日交通 IC 卡 / Pass 每日攻略</span>
         <span style="font-size:0.78rem; color:var(--accent); font-weight:normal;">點擊展開 / 收合 ▾</span>
       </summary>
       <div id="transport-note-container"></div>
@@ -671,7 +693,7 @@
       if (day.summaryFlow) {
         summaryArea.innerHTML = `
           <div class="summary-flow-box">
-            📍 今日路線總覽：<br>${day.summaryFlow}
+            📌 今日路線總覽：<br>${day.summaryFlow}
           </div>
         `;
       } else {
@@ -683,7 +705,7 @@
         vjwArea.innerHTML = `
           <div class="vjw-box">
             <strong>📝 Visit Japan Web 填寫用飯店地址：</strong>
-            <pre style="font-family:inherit; white-space:pre-wrap; margin-top:4px; font-size:0.8rem; color:#554a3e;">${day.vjwAddress}</pre>
+            <pre style="font-family:inherit; white-space:pre-wrap; margin-top:4px; font-size:0.82rem; color:#554a3e;">${day.vjwAddress}</pre>
           </div>
         `;
       } else {
@@ -820,7 +842,35 @@
     }
 
     function renderResourcesTab() {
-      // 渲染頂部交通筆記
+      // 1. 渲染行程小提醒
+      const tipsContainer = document.getElementById('trip-tips-container');
+      if (data.tripTips && tipsContainer) {
+        tipsContainer.innerHTML = '';
+        data.tripTips.forEach(tip => {
+          tipsContainer.innerHTML += `
+            <div class="transport-day-block">
+              <div class="transport-day-title">${tip.title}</div>
+              <div class="transport-item-row">${tip.content}</div>
+            </div>
+          `;
+        });
+      }
+
+      // 2. 渲染 JR Pass 劃位懶人包
+      const jrContainer = document.getElementById('jr-pass-container');
+      if (data.jrPassNote && jrContainer) {
+        jrContainer.innerHTML = '';
+        data.jrPassNote.forEach(item => {
+          jrContainer.innerHTML += `
+            <div class="transport-day-block">
+              <div class="transport-day-title">${item.title}</div>
+              <div class="transport-item-row">${item.detail}</div>
+            </div>
+          `;
+        });
+      }
+
+      // 3. 渲染每日交通 IC 卡攻略
       const tContainer = document.getElementById('transport-note-container');
       if (data.transportNote && tContainer) {
         tContainer.innerHTML = '';
@@ -841,7 +891,7 @@
         });
       }
 
-      // 渲染外部資源連結
+      // 4. 渲染外部資源連結
       const container = document.getElementById('resources-container');
       container.innerHTML = '';
 
